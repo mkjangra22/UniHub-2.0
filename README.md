@@ -2,19 +2,39 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# UniHub 2.0 🎓
 
-This contains everything you need to run your app locally.
+UniHub is a smart college productivity platform designed to help students manage their academic life in one place.  
+It combines storage, timetable management, reminders, results tracking, and an AI-powered academic assistant using Google Gemini.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1JokfejW-6KDr9BlYWNBrrIhEuMWtM3Ke
+---
 
-## Run Locally
+## 🚀 Features
 
-**Prerequisites:**  Node.js
+- 📁 Academic file storage (notes, notices, datesheets, assignments)
+- 🧠 AI academic assistant (Gemini) with English + Hinglish support
+- 🗓️ Smart timetable & reminder management
+- 📝 Notes and subject tracking
+- 📊 Exam results & attendance tracking
+- 🌙 Dark mode support
+- 🔐 Local authentication & onboarding flow
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🛠️ Tech Stack
+
+- **Frontend:** React + TypeScript + Vite
+- **AI:** Google Gemini (AI Studio)
+- **Styling:** Tailwind CSS
+- **Hosting:** Vercel
+- **State Persistence:** LocalStorage (MVP)
+
+---
+
+## ⚙️ Environment Variables
+
+This project requires the following environment variable:
+
+```env
+VITE_GEMINI_API_KEY=your_google_gemini_api_key
+
