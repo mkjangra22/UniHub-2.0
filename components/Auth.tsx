@@ -183,7 +183,7 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
           <div className="relative z-10">
             <div className="mx-auto mb-2 flex justify-center">
               <img 
-                src="/logo.png" 
+                src="unihub-logo-3-1.png" 
                 className="h-40 w-auto object-contain" 
                 alt="UniHub Logo" 
               />
