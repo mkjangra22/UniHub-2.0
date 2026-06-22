@@ -1,0 +1,8 @@
+{
+  "name": "UniHub - AI Personal Academic Assistant",
+  "description": "A comprehensive college management app featuring AI-powered search over documents, assignment reminders, timetable management, and attendance tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

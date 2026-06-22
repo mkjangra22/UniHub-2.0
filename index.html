@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniHub - Academic Assistant</title>
+  <link rel="icon" type="image/png" href="/UniHub (1).png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            indigo: {
+              50: '#f0f5fa',
+              100: '#e1ebf5',
+              200: '#bcd2eb',
+              300: '#8bb5e0',
+              400: '#5292d3',
+              500: '#236eb5',
+              600: '#083D77', // User's Deep Blue
+              700: '#06305f',
+              800: '#042245',
+              900: '#03172e',
+              950: '#010a17',
+            },
+            violet: {
+              50: '#f2f8fc',
+              100: '#e4f0fa',
+              200: '#c2e0f4',
+              300: '#8dc8ed',
+              400: '#50afe4',
+              500: '#2794d2',
+              600: '#1b79b6', // Smooth ocean blue gradient partner
+              700: '#156194',
+              800: '#145279',
+              900: '#144565',
+              950: '#0d2c42',
+            },
+            slate: {
+              50: '#fafaf5',  // Very soft warm off-white background
+              100: '#ebebd3', // User's Sand/Beige color for borders and highlights
+              200: '#dcdcb6',
+              300: '#c9c793',
+              400: '#b1af6f',
+              500: '#94924f',
+              600: '#75743b',
+              700: '#5b5a2e',
+              800: '#434222',
+              900: '#303019',
+              950: '#17170c', // Dark mode background
+            }
+          }
+        },
+      },
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    .dark ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "firebase/": "https://esm.sh/firebase@^12.8.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
