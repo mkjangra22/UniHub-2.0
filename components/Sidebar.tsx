@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile })
         {/* Collapsed Sidebar: Show only the cropped head graphic */}
         <div className="block md:hidden w-10 h-10 overflow-hidden flex items-center justify-start">
           <img 
-            src="unihub-logo-4-1.png" 
+            src="/unihub-logo-4-1.png" 
             className="h-8 max-w-none object-left" 
             style={{ width: 'auto', minWidth: '40px' }} 
             alt="Logo Icon"
@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile })
         {/* Expanded Sidebar: Show the full horizontal logo */}
         <div className="hidden md:block">
           <img 
-            src="unihub-logo-4-1.png" 
+            src="/unihub-logo-4-1.png" 
             className="h-20 w-auto object-contain" 
             alt="UniHub Logo" 
           />
