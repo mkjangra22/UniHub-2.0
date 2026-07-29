@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw design assets & extra root files
+logos/
+/*.png
+diff.txt
+
