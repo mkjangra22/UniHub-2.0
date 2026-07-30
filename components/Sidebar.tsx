@@ -6,9 +6,11 @@ interface SidebarProps {
   activeView: AppView;
   setActiveView: (view: AppView) => void;
   profile: UserProfile | null;
+  isDarkMode: boolean;
+  setIsDarkMode: (dark: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile, isDarkMode, setIsDarkMode }) => {
   const menuItems: { id: AppView, label: string, icon: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: 'fa-house' },
     { id: 'chat', label: 'AI Assistant', icon: 'fa-robot' },
@@ -61,6 +63,22 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile })
       </nav>
 
       <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+        {/* Theme Toggle Button */}
+        <button 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          className="w-full flex items-center justify-center md:justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 transition-all text-xs font-semibold"
+          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          <div className="flex items-center gap-2.5">
+            <i className={`fa-solid ${isDarkMode ? 'fa-sun text-amber-400' : 'fa-moon text-indigo-600'} text-sm`}></i>
+            <span className="hidden md:inline">{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+          </div>
+          <div className={`w-8 h-4 rounded-full p-0.5 transition-colors hidden md:block ${isDarkMode ? 'bg-indigo-600' : 'bg-slate-300'}`}>
+            <div className={`w-3 h-3 rounded-full bg-white transition-transform ${isDarkMode ? 'translate-x-4' : 'translate-x-0'}`}></div>
+          </div>
+        </button>
+
+        {/* User Profile / Settings Button */}
         <button 
           onClick={() => setActiveView('profile')}
           className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all ${
@@ -78,7 +96,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, setActiveView, profile })
           </div>
           <div className="overflow-hidden hidden md:block text-left">
             <p className={`text-xs font-semibold truncate ${activeView === 'profile' ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'}`}>{profile?.name || 'User'}</p>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">Settings</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">Settings & Theme</p>
           </div>
         </button>
       </div>

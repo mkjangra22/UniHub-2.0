@@ -285,6 +285,8 @@ const App: React.FC = () => {
         activeView={activeView} 
         setActiveView={setActiveView} 
         profile={userProfile}
+        isDarkMode={isDarkMode}
+        setIsDarkMode={setIsDarkMode}
       />
       <main className="flex-1 overflow-y-auto relative p-4 md:p-8 transition-colors duration-300 bg-slate-50 dark:bg-slate-950">
         <div className="max-w-6xl mx-auto">
