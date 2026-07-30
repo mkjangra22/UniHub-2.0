@@ -89,15 +89,19 @@ const App: React.FC = () => {
     } catch { return []; }
   });
 
-  // Dark Mode effect
+  // Dark Mode effect (Login screen always stays in normal/light mode)
   useEffect(() => {
+    if (!isLoggedIn) {
+      document.documentElement.classList.remove('dark');
+      return;
+    }
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
     localStorage.setItem('unihub_dark_mode', isDarkMode.toString());
-  }, [isDarkMode]);
+  }, [isDarkMode, isLoggedIn]);
 
   // Persistence Effects
   const isDataLoadedRef = useRef(false);
