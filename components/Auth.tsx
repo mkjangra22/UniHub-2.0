@@ -8,7 +8,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
-import { saveUserDataToFirestore } from '../services/dbService';
+import { saveUserDataToFirestore, fetchUserDataFromFirestore } from '../services/dbService';
 
 interface AuthProps {
   onAuthSuccess: (profile: UserProfile, userId: string) => void;
@@ -69,13 +69,16 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
           const userCredential = await signInWithEmailAndPassword(auth!, email, password);
           const uid = userCredential.user.uid;
           
-          // Fetch user profile linked to this Firebase UID from localStorage
+          // Fetch user profile linked to this Firebase UID from Firestore first, then localStorage
+          const firestoreData = await fetchUserDataFromFirestore(uid);
           const savedProfileStr = localStorage.getItem(`unihub_${uid}_profile`);
           let profile: UserProfile;
-          if (savedProfileStr) {
+          if (firestoreData && firestoreData.profile) {
+            profile = firestoreData.profile;
+          } else if (savedProfileStr) {
             profile = JSON.parse(savedProfileStr);
           } else {
-            // Fallback profile if Firestore is not connected
+            // Fallback profile if profile not saved yet
             profile = {
               name: email.split('@')[0],
               college: 'University Hub',
@@ -85,9 +88,8 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
               isSetupComplete: false,
               attendanceThreshold: 75
             };
-            localStorage.setItem(`unihub_${uid}_profile`, JSON.stringify(profile));
           }
-          // Also set active user profile key for global app persistence
+          localStorage.setItem(`unihub_${uid}_profile`, JSON.stringify(profile));
           localStorage.setItem('unihub_active_uid', uid);
           onAuthSuccess(profile, uid);
         } else {
@@ -191,9 +193,12 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         const user = userCredential.user;
         const uid = user.uid;
 
+        const firestoreData = await fetchUserDataFromFirestore(uid);
         const savedProfileStr = localStorage.getItem(`unihub_${uid}_profile`);
         let profile: UserProfile;
-        if (savedProfileStr) {
+        if (firestoreData && firestoreData.profile) {
+          profile = firestoreData.profile;
+        } else if (savedProfileStr) {
           profile = JSON.parse(savedProfileStr);
         } else {
           profile = {
@@ -206,9 +211,9 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
             attendanceThreshold: 75,
             avatarUrl: user.photoURL || undefined
           };
-          localStorage.setItem(`unihub_${uid}_profile`, JSON.stringify(profile));
           await saveUserDataToFirestore(uid, 'unihub_profile', profile);
         }
+        localStorage.setItem(`unihub_${uid}_profile`, JSON.stringify(profile));
         localStorage.setItem('unihub_active_uid', uid);
         onAuthSuccess(profile, uid);
       } catch (err: any) {
@@ -218,6 +223,8 @@ const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
           msg = 'Sign-in popup was closed before completing.';
         } else if (err.code === 'auth/cancelled-popup-request') {
           msg = 'Sign-in request was cancelled.';
+        } else if (err.code === 'auth/unauthorized-domain') {
+          msg = 'Domain unauthorized! Add your current domain (e.g. localhost) to Firebase Console -> Authentication -> Settings -> Authorized domains.';
         }
         setError(msg);
       } finally {

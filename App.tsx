@@ -104,18 +104,12 @@ const App: React.FC = () => {
   }, [isDarkMode, isLoggedIn]);
 
   // Persistence Effects
-  const isDataLoadedRef = useRef(false);
-
   const safeSave = async (key: string, data: any) => {
     if (isLoggedIn && currentUserId) {
       try {
         const isolatedKey = `unihub_${currentUserId}_${key.replace('unihub_', '')}`;
         localStorage.setItem(isolatedKey, JSON.stringify(data));
-        
-        // Only push to Firestore if the initial data load has finished!
-        if (isDataLoadedRef.current) {
-          await saveUserDataToFirestore(currentUserId, key, data);
-        }
+        await saveUserDataToFirestore(currentUserId, key, data);
       } catch (e) {
         console.warn(`Failed to save ${key}:`, e);
       }
@@ -133,28 +127,44 @@ const App: React.FC = () => {
 
   // Load latest data from Firestore on Mount/Login
   useEffect(() => {
-    if (!isLoggedIn || !currentUserId) {
-      isDataLoadedRef.current = false;
-      return;
-    }
+    if (!isLoggedIn || !currentUserId) return;
 
-    isDataLoadedRef.current = false; // Reset loaded flag on user switch
     const loadData = async () => {
       try {
         const firestoreData = await fetchUserDataFromFirestore(currentUserId);
         if (firestoreData) {
-          if (firestoreData.profile) setUserProfile(firestoreData.profile);
-          if (firestoreData.files) setFiles(firestoreData.files);
-          if (firestoreData.reminders) setReminders(firestoreData.reminders);
-          if (firestoreData.timetable) setTimetable(firestoreData.timetable);
-          if (firestoreData.subjects) setSubjects(firestoreData.subjects);
-          if (firestoreData.notes) setNotes(firestoreData.notes);
-          if (firestoreData.exam_results) setExamResults(firestoreData.exam_results);
+          const prefix = `unihub_${currentUserId}`;
+          if (firestoreData.profile) {
+            setUserProfile(firestoreData.profile);
+            localStorage.setItem(`${prefix}_profile`, JSON.stringify(firestoreData.profile));
+          }
+          if (firestoreData.files) {
+            setFiles(firestoreData.files);
+            localStorage.setItem(`${prefix}_files`, JSON.stringify(firestoreData.files));
+          }
+          if (firestoreData.reminders) {
+            setReminders(firestoreData.reminders);
+            localStorage.setItem(`${prefix}_reminders`, JSON.stringify(firestoreData.reminders));
+          }
+          if (firestoreData.timetable) {
+            setTimetable(firestoreData.timetable);
+            localStorage.setItem(`${prefix}_timetable`, JSON.stringify(firestoreData.timetable));
+          }
+          if (firestoreData.subjects) {
+            setSubjects(firestoreData.subjects);
+            localStorage.setItem(`${prefix}_subjects`, JSON.stringify(firestoreData.subjects));
+          }
+          if (firestoreData.notes) {
+            setNotes(firestoreData.notes);
+            localStorage.setItem(`${prefix}_notes`, JSON.stringify(firestoreData.notes));
+          }
+          if (firestoreData.exam_results) {
+            setExamResults(firestoreData.exam_results);
+            localStorage.setItem(`${prefix}_exam_results`, JSON.stringify(firestoreData.exam_results));
+          }
         }
       } catch (err) {
         console.error("Error loading user data from Firestore:", err);
-      } finally {
-        isDataLoadedRef.current = true;
       }
     };
 
@@ -190,10 +200,23 @@ const App: React.FC = () => {
     setExamResults(savedExamResults ? JSON.parse(savedExamResults) : []);
   };
 
-  const handleOnboardingComplete = (profile: UserProfile, subs: Subject[], table: TimetableEntry[]) => {
-    setUserProfile(profile);
+  const handleOnboardingComplete = async (profile: UserProfile, subs: Subject[], table: TimetableEntry[]) => {
+    const completedProfile: UserProfile = { ...profile, isSetupComplete: true };
+    setUserProfile(completedProfile);
     setSubjects(subs);
     setTimetable(table);
+
+    if (currentUserId) {
+      const userPrefix = `unihub_${currentUserId}`;
+      localStorage.setItem(`${userPrefix}_profile`, JSON.stringify(completedProfile));
+      localStorage.setItem(`${userPrefix}_subjects`, JSON.stringify(subs));
+      localStorage.setItem(`${userPrefix}_timetable`, JSON.stringify(table));
+
+      await saveUserDataToFirestore(currentUserId, 'unihub_profile', completedProfile);
+      await saveUserDataToFirestore(currentUserId, 'unihub_subjects', subs);
+      await saveUserDataToFirestore(currentUserId, 'unihub_timetable', table);
+    }
+
     setActiveView('dashboard');
   };
 
